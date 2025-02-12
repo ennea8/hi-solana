@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "counter_program"
+    "counter_program",
 ]
 
 resolver = "2"

@@ -8,3 +8,6 @@
 /.history
 /target
 .DS_Store
+
+/.history
+/node_modules
