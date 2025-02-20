@@ -1,3 +1,21 @@
-Program Id: 8dRURnoSrHvc8SVXvYDFpZBpFPAotzmHDEPnDUyE68VN
 
-Signature: 5bmB53QaiazRo4z7YsDKt42bBm5F1yvLMgnEZ3dwtYCrUb1xqD8dQt6Sr6ZHsR1fjjTk5swzgZiNjGRJ5wdCYtFe
+
+```bash
+## build
+cd counter_program
+cargo build-bpf
+
+cd ..
+solana program deploy ./target/deploy/counter_program.so
+
+
+## deploy
+solana program deploy ./target/deploy/counter_program.so
+
+## call
+node client.mjs  
+
+##  view
+https://explorer.solana.com/
+
+```
