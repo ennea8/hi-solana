@@ -18,7 +18,9 @@ solana program deploy ./target/deploy/counter_program.so
 pnpx esrun ./scripts/counter.ts
 
 ##  view
-https://explorer.solana.com/
+
+https://explorer.solana.com?cluster=devnet
+https://solscan.io?cluster=devnet
 
 ```
 
