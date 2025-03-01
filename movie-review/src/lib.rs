@@ -5,6 +5,7 @@ pub mod state;
 use instruction::MovieInstruction;
 use state::MovieAccountState;
 
+use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     entrypoint,
@@ -16,8 +17,6 @@ use solana_program::{
     system_instruction,
     sysvar::Sysvar,
 };
-use borsh::{BorshSerialize, BorshDeserialize};
-
 
 // Entry point is a function call process_instruction
 entrypoint!(process_instruction);
