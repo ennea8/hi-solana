@@ -78,6 +78,7 @@ pub fn add_movie_review(
             pda_account.clone(),
             system_program.clone(),
         ],
+        //@note learn: for PDA info to invoke_signed? how it is used in this function
         &[&[
             initializer.key.as_ref(),
             title.as_bytes().as_ref(),
@@ -99,7 +100,7 @@ pub fn add_movie_review(
 
     // Finally, serialize the updated account_data into the data field of pda_account.
     msg!("Serializing account");
-    // TODO understand
+    //@note learn: syntax
     account_data.serialize(&mut &mut pda_account.data.borrow_mut()[..])?;
     msg!("State account serialized");
 
