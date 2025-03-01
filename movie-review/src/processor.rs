@@ -57,7 +57,8 @@ pub fn add_movie_review(
     );
 
     // Calculate account size required
-    let account_len: usize = 1 + 1 + (4 + title.len()) + (4 + description.len());
+    // let account_len: usize = 1 + 1 + (4 + title.len()) + (4 + description.len());
+    let account_len = 1000;
 
     // Calculate rent required
     let rent = Rent::get()?;
@@ -98,6 +99,7 @@ pub fn add_movie_review(
 
     // Finally, serialize the updated account_data into the data field of pda_account.
     msg!("Serializing account");
+    // TODO understand
     account_data.serialize(&mut &mut pda_account.data.borrow_mut()[..])?;
     msg!("State account serialized");
 
