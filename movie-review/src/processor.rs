@@ -1,3 +1,4 @@
+use crate::error::ReviewError;
 use crate::instruction::MovieInstruction;
 use crate::state::MovieAccountState;
 
@@ -8,10 +9,11 @@ use solana_program::{
     entrypoint::ProgramResult,
     msg,
     program::invoke_signed,
+    program_error::ProgramError,
     pubkey::Pubkey,
-    rent::Rent,
     system_instruction,
-    sysvar::Sysvar,
+    sysvar::{ Sysvar, rent::Rent},
+    program_pack::{IsInitialized},
 };
 
 pub fn process_instruction(
@@ -50,11 +52,32 @@ pub fn add_movie_review(
     let pda_account = next_account_info(account_info_iter)?;
     let system_program = next_account_info(account_info_iter)?;
 
+    if !initializer.is_signer {
+        msg!("Missing required signature");
+        return Err(ProgramError::MissingRequiredSignature);
+    }
+
     // Derive PDA
     let (pda, bump_seed) = Pubkey::find_program_address(
         &[initializer.key.as_ref(), title.as_bytes().as_ref()],
         program_id,
     );
+
+    if pda != *pda_account.key {
+        msg!("Invalid seeds for PDA");
+        return Err(ReviewError::InvalidPDA.into());
+    }
+
+    if rating > 5 || rating < 1 {
+        msg!("Rating cannot be higher than 5");
+        return Err(ReviewError::InvalidRating.into());
+    }
+
+    let total_len: usize = 1 + 1 + (4 + title.len()) + (4 + description.len());
+    if total_len > 1000 {
+        msg!("Data length is larger than 1000 bytes");
+        return Err(ReviewError::InvalidDataLength.into());
+    }
 
     // Calculate account size required
     // let account_len: usize = 1 + 1 + (4 + title.len()) + (4 + description.len());
@@ -92,6 +115,12 @@ pub fn add_movie_review(
     let mut account_data = MovieAccountState::try_from_slice(&pda_account.data.borrow())
         .unwrap_or(MovieAccountState::default());
     msg!("Borrowed account data");
+
+    msg!("checking if movie account is already initialized");
+    if account_data.is_initialized() {
+      msg!("Account already initialized");
+      return Err(ProgramError::AccountAlreadyInitialized);
+  }
 
     account_data.title = title;
     account_data.rating = rating;
